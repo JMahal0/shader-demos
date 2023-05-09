@@ -79,12 +79,12 @@ Shader "Unlit/RGBLerpShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // sample the texture
-                fixed4 gray = tex2D(_MainTex, i.uv).r;
+                // Sample the relative luminance (y) of the texture
+                fixed4 y = 0.299 * tex2D(_MainTex, i.uv).r + 0.587 * tex2D(_MainTex, i.uv).g + 0.114 * tex2D(_MainTex, i.uv).b;
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 
-                float scroll = frac(gray + _Time.x * _ColorSpeed);
+                float scroll = frac(y + _Time.x * _ColorSpeed);
 
                 fixed4 col = linearInterpolationWithWrapAround(scroll);
                 
